@@ -82,15 +82,15 @@ class Build(JenkinsBase):
         return self._data["builtOn"]
 
     def get_revision(self):
-        vcs = self._data['changeSet']['kind'] or 'git'
+        vcs = self._data['changeSets'][0]['kind'] or 'git'
         return getattr(self, '_get_%s_rev' % vcs, lambda: None)()
 
     def get_revision_branch(self):
-        vcs = self._data['changeSet']['kind'] or 'git'
+        vcs = self._data['changeSets'][0]['kind'] or 'git'
         return getattr(self, '_get_%s_rev_branch' % vcs, lambda: None)()
 
     def get_repo_url(self):
-        vcs = self._data['changeSet']['kind'] or 'git'
+        vcs = self._data['changeSets'][0]['kind'] or 'git'
         return getattr(self, '_get_%s_repo_url' % vcs, lambda: None)()
 
     def get_params(self):
@@ -162,10 +162,10 @@ class Build(JenkinsBase):
         # Sometimes we have None as part of actions. Filter those actions
         # which have lastBuiltRevision in them
         _actions = [x for x in self._data['actions']
-                    if x and "lastBuiltRevision" in x]
+                    if x and "build" in x]
 
         if _actions:
-            return _actions[0]["lastBuiltRevision"]["SHA1"]
+            return _actions[0]["build"]["revision"]['SHA1']
 
         return None
 
@@ -183,9 +183,9 @@ class Build(JenkinsBase):
         # Sometimes we have None as part of actions. Filter those actions
         # which have lastBuiltRevision in them
         _actions = [x for x in self._data['actions']
-                    if x and "lastBuiltRevision" in x]
+                    if x and "build" in x]
 
-        return _actions[0]["lastBuiltRevision"]["branch"]
+        return _actions[0]["build"]["revision"]['branch'][0]['name']
 
     def _get_hg_rev_branch(self):
         raise NotImplementedError('_get_hg_rev_branch is not yet implemented')
