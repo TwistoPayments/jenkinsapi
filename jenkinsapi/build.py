@@ -82,15 +82,18 @@ class Build(JenkinsBase):
         return self._data["builtOn"]
 
     def get_revision(self):
-        vcs = self._data['changeSets'][0]['kind'] or 'git'
+        change_sets = self._data['changeSets']
+        vcs = change_sets[0]['kind'] if change_sets else 'git'
         return getattr(self, '_get_%s_rev' % vcs, lambda: None)()
 
     def get_revision_branch(self):
-        vcs = self._data['changeSets'][0]['kind'] or 'git'
+        change_sets = self._data['changeSets']
+        vcs = change_sets[0]['kind'] if change_sets else 'git'
         return getattr(self, '_get_%s_rev_branch' % vcs, lambda: None)()
 
     def get_repo_url(self):
-        vcs = self._data['changeSets'][0]['kind'] or 'git'
+        change_sets = self._data['changeSets']
+        vcs = change_sets[0]['kind'] if change_sets else 'git'
         return getattr(self, '_get_%s_repo_url' % vcs, lambda: None)()
 
     def get_params(self):
