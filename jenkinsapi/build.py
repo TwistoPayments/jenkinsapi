@@ -168,7 +168,7 @@ class Build(JenkinsBase):
                     if x and "build" in x]
 
         if _actions:
-            return _actions[0]["build"]["revision"]['SHA1']
+            return _actions[0]["build"]["revision"]["SHA1"]
 
         return None
 
@@ -188,7 +188,7 @@ class Build(JenkinsBase):
         _actions = [x for x in self._data['actions']
                     if x and "build" in x]
 
-        return _actions[0]["build"]["revision"]['branch'][0]['name']
+        return _actions[0]["build"]["revision"]["branch"][0]["name"]
 
     def _get_hg_rev_branch(self):
         raise NotImplementedError('_get_hg_rev_branch is not yet implemented')
